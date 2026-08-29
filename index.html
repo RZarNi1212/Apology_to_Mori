@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For My Love</title>
+    <style>
+      :root {
+        --bg1: #fff1f6;
+        --bg2: #f4d9ff;
+        --bg3: #f8c8db;
+        --pink: #ff5ca8;
+        --rose: #ff7aa9;
+        --purple: #8a66ff;
+        --lavender: #d9ccff;
+        --white: rgba(255, 255, 255, 0.72);
+        --card: rgba(255, 255, 255, 0.2);
+        --card-border: rgba(255, 255, 255, 0.5);
+        --text: #4d2452;
+        --muted: #7a5579;
+        --shadow: rgba(166, 81, 130, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "Noto Sans Myanmar", "Myanmar Text", Tahoma, sans-serif;
+        background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(circle at top left, rgba(255,255,255,0.35), transparent 26%),
+          radial-gradient(circle at bottom right, rgba(138,102,255,0.12), transparent 28%);
+        pointer-events: none;
+      }
+
+      .floating-hearts,
+      .bg-sparkles {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .floating-hearts span,
+      .bg-sparkles span {
+        position: absolute;
+        display: block;
+        opacity: 0.65;
+        animation: floatUp linear infinite;
+      }
+
+      .floating-hearts span {
+        font-size: clamp(1.1rem, 2vw, 2rem);
+        color: rgba(255, 92, 168, 0.9);
+        filter: drop-shadow(0 0 8px rgba(255, 130, 184, 0.5));
+      }
+
+      .bg-sparkles span {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.9);
+        box-shadow: 0 0 8px rgba(255,255,255,0.7);
+        animation: twinkle 4s ease-in-out infinite;
+      }
+
+      @keyframes floatUp {
+        0% {
+          transform: translateY(110vh) scale(0.7) rotate(0deg);
+          opacity: 0;
+        }
+        15% { opacity: 0.7; }
+        100% {
+          transform: translateY(-20vh) scale(1.3) rotate(18deg);
+          opacity: 0;
+        }
+      }
+
+      @keyframes twinkle {
+        0%, 100% { opacity: 0.2; transform: scale(0.8); }
+        50% { opacity: 1; transform: scale(1.2); }
+      }
+
+      .container {
+        position: relative;
+        z-index: 2;
+        width: min(100%, 900px);
+        margin: 0 auto;
+        padding: 28px 18px 50px;
+      }
+
+      .screen {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .glass {
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        box-shadow: 0 20px 45px var(--shadow);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 28px;
+      }
+
+      .landing-card {
+        width: min(92vw, 620px);
+        padding: clamp(24px, 5vw, 52px) clamp(20px, 5vw, 44px);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .landing-card::before,
+      .landing-card::after {
+        content: "";
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.12);
+      }
+
+      .landing-card::before {
+        top: -70px;
+        left: -50px;
+      }
+
+      .landing-card::after {
+        bottom: -80px;
+        right: -20px;
+      }
+
+      .mini-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.35);
+        border: 1px solid rgba(255,255,255,0.5);
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-bottom: 18px;
+      }
+
+      h1, h2, h3, h4, p {
+        margin: 0;
+      }
+
+      .landing-card h1 {
+        font-size: clamp(2rem, 5vw, 3.3rem);
+        line-height: 1.25;
+        margin-bottom: 14px;
+      }
+
+      .landing-card h2 {
+        font-size: clamp(1.2rem, 3vw, 1.7rem);
+        color: var(--muted);
+        margin-bottom: 18px;
+      }
+
+      .heart-pulse {
+        font-size: clamp(2.2rem, 7vw, 4rem);
+        margin: 18px auto 28px;
+        animation: pulseHeart 1.6s ease-in-out infinite;
+        filter: drop-shadow(0 0 10px rgba(255, 91, 167, 0.45));
+      }
+
+      @keyframes pulseHeart {
+        0%, 100% { transform: scale(1); }
+        25% { transform: scale(1.15); }
+        50% { transform: scale(1.35); }
+        75% { transform: scale(1.12); }
+      }
+
+      .primary-btn,
+      .choice-btn {
+        appearance: none;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+      }
+
+      .primary-btn {
+        background: linear-gradient(135deg, #ff81b8, #bc8dff);
+        color: white;
+        font-size: 1.02rem;
+        padding: 16px 28px;
+        box-shadow: 0 12px 28px rgba(190, 117, 191, 0.38);
+      }
+
+      .primary-btn:hover,
+      .choice-btn:hover {
+        transform: translateY(-2px) scale(1.02);
+      }
+
+      .main-content {
+        padding-top: 24px;
+      }
+
+      .section {
+        margin-bottom: 28px;
+      }
+
+      .apology-box,
+      .memory-card,
+      .question-box,
+      .final-box {
+        padding: 24px 18px;
+      }
+
+      .apology-box {
+        text-align: left;
+      }
+
+      .apology-box h3 {
+        font-size: clamp(1.6rem, 4vw, 2.2rem);
+        margin-bottom: 18px;
+      }
+
+      .typed-text {
+        font-size: clamp(1rem, 2.3vw, 1.15rem);
+        line-height: 1.9;
+        color: var(--text);
+        white-space: pre-wrap;
+        min-height: 240px;
+        display: block;
+      }
+
+      .cursor {
+        display: inline-block;
+        width: 2px;
+        height: 1.1em;
+        background: var(--pink);
+        vertical-align: middle;
+        animation: blink 0.8s infinite;
+        margin-left: 2px;
+      }
+
+      @keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+      }
+
+      .memory-box h3 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        margin-bottom: 18px;
+      }
+
+      .memory-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .memory-card {
+        min-height: 260px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .memory-card .icon {
+        font-size: 2rem;
+        margin-bottom: 12px;
+      }
+
+      .memory-card h4 {
+        font-size: 1.05rem;
+        line-height: 1.5;
+        margin-bottom: 14px;
+      }
+
+      .photo-placeholder {
+        flex: 1;
+        min-height: 130px;
+        display: grid;
+        place-items: center;
+        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.45), rgba(206,160,255,0.25));
+        border: 1px dashed rgba(255,255,255,0.7);
+        color: rgba(77,36,82,0.7);
+        text-align: center;
+        font-size: 0.88rem;
+        padding: 12px;
+        overflow: hidden;
+      }
+
+      .photo-placeholder img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 18px;
+      }
+
+      .question-box {
+        text-align: center;
+      }
+
+      .question-box h3 {
+        font-size: clamp(1.6rem, 4vw, 2.3rem);
+        margin-bottom: 22px;
+      }
+
+      .choice-wrap {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .choice-btn {
+        padding: 16px 20px;
+        font-size: 1rem;
+        min-width: 180px;
+      }
+
+      .choice-btn.forgive {
+        background: linear-gradient(135deg, #ff7ab8, #ffb9d4);
+        color: white;
+      }
+
+      .choice-btn.refuse {
+        background: linear-gradient(135deg, #fce6f0, #f5d9ff);
+        color: var(--text);
+      }
+
+      .choice-btn.refuse.dodging {
+        animation: dodge 0.35s ease-in-out 2 alternate;
+      }
+
+      .choice-btn.forgive.growing {
+        transform: scale(1.08);
+        box-shadow: 0 14px 24px rgba(255, 130, 184, 0.4);
+      }
+
+      @keyframes dodge {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        25% { transform: translate(-18px, -10px) rotate(-7deg); }
+        50% { transform: translate(18px, 8px) rotate(6deg); }
+        75% { transform: translate(-12px, 10px) rotate(-4deg); }
+        100% { transform: translate(0, 0) rotate(0deg); }
+      }
+
+      .mini-message {
+        margin-top: 18px;
+        padding: 16px 18px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.25);
+        border: 1px solid rgba(255,255,255,0.4);
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .mini-message p {
+        line-height: 1.7;
+      }
+
+      .final-box {
+        text-align: center;
+      }
+
+      .final-box h3 {
+        font-size: clamp(1.6rem, 4vw, 2.3rem);
+        margin-bottom: 18px;
+      }
+
+      .big-heart {
+        font-size: clamp(3rem, 10vw, 7rem);
+        margin-top: 8px;
+        animation: pulseHeart 1.6s ease-in-out infinite;
+      }
+
+      .success-overlay {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255, 145, 190, 0.7), rgba(155, 106, 255, 0.76));
+        display: grid;
+        place-items: center;
+        z-index: 99;
+        backdrop-filter: blur(5px);
+      }
+
+      .success-card {
+        width: min(90vw, 540px);
+        background: rgba(255,255,255,0.25);
+        border: 1px solid rgba(255,255,255,0.45);
+        border-radius: 30px;
+        padding: 32px 22px;
+        text-align: center;
+        box-shadow: 0 16px 42px rgba(98, 46, 118, 0.25);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .success-card h2 {
+        font-size: clamp(2rem, 7vw, 3rem);
+        margin: 8px 0 10px;
+      }
+
+      .success-card p {
+        font-size: clamp(1rem, 3vw, 1.35rem);
+        line-height: 1.8;
+      }
+
+      .huge-heart {
+        font-size: clamp(3.5rem, 10vw, 6rem);
+        animation: pulseHeart 1.4s ease-in-out infinite;
+      }
+
+      .confetti-layer {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .confetti {
+        position: absolute;
+        top: -20px;
+        width: 12px;
+        height: 24px;
+        border-radius: 8px;
+        animation: shower 3.2s linear forwards;
+        opacity: 0.9;
+      }
+
+      @keyframes shower {
+        0% {
+          transform: translateY(0) rotate(0deg) scale(0.8);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(120vh) rotate(500deg) scale(1.2);
+          opacity: 0;
+        }
+      }
+
+      .audio-toggle {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.5);
+        background: rgba(255, 255, 255, 0.28);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 12px 22px rgba(122, 87, 121, 0.22);
+        display: grid;
+        place-items: center;
+        font-size: 1.4rem;
+        z-index: 20;
+        cursor: pointer;
+        transition: transform 0.25s ease;
+      }
+
+      .audio-toggle:hover {
+        transform: translateY(-2px) scale(1.03);
+      }
+
+      @media (max-width: 700px) {
+        body {
+          padding-bottom: 80px;
+        }
+
+        .container {
+          width: 100%;
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+
+        .landing-card,
+        .apology-box,
+        .memory-box,
+        .question-box,
+        .final-box,
+        .success-card {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .memory-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .choice-wrap {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .choice-btn {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .audio-toggle {
+          width: 48px;
+          height: 48px;
+          right: 14px;
+          bottom: 14px;
+          font-size: 1.1rem;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .landing-card {
+          padding: 22px 16px;
+        }
+
+        .landing-card h1 {
+          font-size: 1.9rem;
+        }
+
+        .landing-card h2 {
+          font-size: 1.08rem;
+        }
+
+        .section {
+          margin-bottom: 18px;
+        }
+
+        .apology-box,
+        .memory-card,
+        .question-box,
+        .final-box {
+          padding: 18px 14px;
+        }
+
+        .typed-text {
+          min-height: 200px;
+          font-size: 0.98rem;
+        }
+
+        .mini-tag {
+          font-size: 0.74rem;
+          padding: 7px 12px;
+        }
+
+        .primary-btn {
+          width: 100%;
+          padding: 15px 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="floating-hearts" id="floatingHearts" aria-hidden="true"></div>
+    <div class="bg-sparkles" id="sparkles" aria-hidden="true"></div>
+
+    <div class="container">
+      <section id="landingScreen" class="screen">
+        <div class="landing-card glass">
+          <div class="mini-tag">For my favorite person 💖</div>
+          <h1>ဟေး Mori ရေ... 🥺❤️</h1>
+          <h2>စိတ်မကောက်တော့နဲ့နော်...</h2>
+          <div class="heart-pulse" aria-label="Animated heart">❤️</div>
+          <button id="enterButton" class="primary-btn" type="button">ဝင်ကြည့်မယ် 💕</button>
+        </div>
+      </section>
+
+      <main id="mainContent" class="main-content hidden">
+        <section class="section apology-box glass">
+          <h3>To Mori...</h3>
+          <p id="apologyText" class="typed-text" aria-live="polite"></p>
+        </section>
+
+        <section class="section memory-box glass">
+          <h3>My Gallery Collection ❤️</h3>
+          <div class="memory-grid">
+            <article class="memory-card glass">
+              <div class="icon">💞</div>
+            
+              <div class="photo-placeholder" aria-label="Photo placeholder for our happy memories">
+                <!-- Replace this block with your photo later -->
+                <img src="fav.jpg">
+              </div>
+            </article>
+
+            <article class="memory-card glass">
+              <div class="icon">🌸</div>
+              <div class="photo-placeholder" aria-label="Photo placeholder for your smile">
+                <!-- Replace this block with your photo later -->
+               <img src="one.JPG">
+              </div>
+            </article>
+
+            <article class="memory-card glass">
+              <div class="icon">💗</div>
+              
+              <div class="photo-placeholder" aria-label="Photo placeholder for us together">
+                <!-- Replace this block with your photo later -->
+                <image src="solo.jpg">
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section question-box glass">
+          <h3>ကိုယ့်ကို ခွင့်လွှတ်ပေးမလား? 🥺❤️</h3>
+          <div class="choice-wrap">
+            <button type="button" class="choice-btn forgive" id="forgiveBtn">ခွင့်လွှတ်မယ် ❤️</button>
+            <button type="button" class="choice-btn refuse" id="refuseBtn">မခွင့်လွှတ်သေးဘူး 😤</button>
+          </div>
+          <div id="refuseMessage" class="mini-message hidden" aria-live="polite">
+            <p>ဟာ... မလုပ်ပါနဲ့ကွာ 🥺</p>
+            <p>တစ်ခါလောက်တော့ ခွင့်လွှတ်ပေးပါနော် ❤️</p>
+          </div>
+        </section>
+
+        <section class="section final-box glass">
+          <h3>စိတ်မကောက်တော့ဘဲ ကိုယ့်နဲ့လာတွေ့နော် ❤️</h3>
+          <div class="big-heart" aria-label="Large animated heart">❤️</div>
+        </section>
+      </main>
+    </div>
+
+    <audio id="bgMusic" src="love_song.mp3" loop preload="auto"></audio>
+    <button id="audioToggle" class="audio-toggle" type="button" aria-label="Play background music" title="Play / Pause background music">🎵</button>
+
+    <div id="successOverlay" class="success-overlay hidden" aria-live="assertive">
+      <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+      <div class="success-card glass">
+        <div class="huge-heart">💖</div>
+        <h2>Yayyyy! 🥹❤️</h2>
+        <p>ကျေးဇူးတင်ပါတယ် Mori ရေ</p>
+        <p>ကိုယ် Mori ကို လာတွေ့မယ်နော် ❤️</p>
+      </div>
+    </div>
+
+    <script>
+      // Change the name / personal touches here if you want.
+      // Example: replace "အချစ်ရေ" with your girlfriend's name when desired.
+
+      const enterButton = document.getElementById('enterButton');
+      const landingScreen = document.getElementById('landingScreen');
+      const mainContent = document.getElementById('mainContent');
+      const apologyText = document.getElementById('apologyText');
+      const refuseBtn = document.getElementById('refuseBtn');
+      const refuseMessage = document.getElementById('refuseMessage');
+      const forgiveBtn = document.getElementById('forgiveBtn');
+      const successOverlay = document.getElementById('successOverlay');
+      const confettiLayer = document.getElementById('confettiLayer');
+      const audioToggle = document.getElementById('audioToggle');
+      const bgMusic = document.getElementById('bgMusic');
+      const maxRefuseAttempts = 5;
+      let refuseAttempts = 0;
+
+      // Edit this apology message anytime you want a more personal note.
+      const apologyMessage = `Mori ရေ...
+ကိုယ်လုပ်မိ/ပြောမိတာအတွက် တကယ်တောင်းပန်ပါတယ်။
+Mori ကို စိတ်မကောင်းဖြစ်စေချင်လို့ မဟုတ်ပါဘူး။
+ကိုယ်မှားသွားတာကိုလည်း ကိုယ်သိပါတယ်။
+Mori စိတ်ပြေတဲ့အထိ ကိုယ်စောင့်ပေးမယ်နော်။
+စိတ်မကောက်တော့ဘဲ ကိုယ့်ကို ပြန်ပြုံးပြပေးပါဦး 🥺❤️`;
+
+      function createFloatingHearts() {
+        const container = document.getElementById('floatingHearts');
+        const sparkles = document.getElementById('sparkles');
+
+        const hearts = ['💖', '💗', '💕', '💞', '💘', '💝'];
+
+        for (let i = 0; i < 22; i++) {
+          const heart = document.createElement('span');
+          heart.textContent = hearts[i % hearts.length];
+          heart.style.left = `${Math.random() * 100}%`;
+          heart.style.animationDuration = `${10 + Math.random() * 18}s`;
+          heart.style.animationDelay = `${Math.random() * -20}s`;
+          heart.style.fontSize = `${0.9 + Math.random() * 1.9}rem`;
+          container.appendChild(heart);
+        }
+
+        for (let i = 0; i < 20; i++) {
+          const dot = document.createElement('span');
+          dot.style.left = `${Math.random() * 100}%`;
+          dot.style.top = `${Math.random() * 100}%`;
+          dot.style.animationDuration = `${2 + Math.random() * 5}s`;
+          dot.style.animationDelay = `${Math.random() * 4}s`;
+          sparkles.appendChild(dot);
+        }
+      }
+
+      function typeText(element, text, speed = 30) {
+        let index = 0;
+
+        function tick() {
+          if (index <= text.length) {
+            element.innerHTML = `${text.slice(0, index)}<span class="cursor"></span>`;
+            index += 1;
+            setTimeout(tick, speed);
+          } else {
+            element.innerHTML = text;
+          }
+        }
+
+        tick();
+      }
+
+      function showConfetti() {
+        confettiLayer.innerHTML = '';
+        const colors = ['#ff7ab8', '#ffc0d9', '#dcb8ff', '#ffd166', '#ff9f9f', '#d9f99d'];
+
+        for (let i = 0; i < 48; i++) {
+          const piece = document.createElement('span');
+          piece.className = 'confetti';
+          piece.style.left = `${Math.random() * 100}%`;
+          piece.style.background = colors[i % colors.length];
+          piece.style.animationDelay = `${(Math.random() * 0.7).toFixed(2)}s`;
+          piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+          confettiLayer.appendChild(piece);
+        }
+      }
+
+      function playMusic() {
+        if (bgMusic) {
+          bgMusic.play();
+        }
+        audioToggle.textContent = '⏸';
+        audioToggle.setAttribute('aria-label', 'Pause background music');
+      }
+
+      function stopMusic() {
+        if (bgMusic) {
+          bgMusic.pause();
+        }
+        audioToggle.textContent = '🎵';
+        audioToggle.setAttribute('aria-label', 'Play background music');
+      }
+
+      function toggleMusic() {
+        if (bgMusic && !bgMusic.paused) {
+          stopMusic();
+        } else {
+          playMusic();
+        }
+      }
+
+      enterButton.addEventListener('click', () => {
+        landingScreen.classList.add('hidden');
+        mainContent.classList.remove('hidden');
+        typeText(apologyText, apologyMessage, 28);
+      });
+
+      refuseBtn.addEventListener('click', () => {
+        refuseAttempts += 1;
+        refuseBtn.classList.remove('dodging');
+        void refuseBtn.offsetWidth;
+        refuseBtn.classList.add('dodging');
+
+        const shrinkScale = Math.max(0.45, 1 - refuseAttempts * 0.12);
+        const growScale = 1 + refuseAttempts * 0.08;
+        const maxX = 26;
+        const maxY = 12;
+        const x = (Math.random() * 2 - 1) * maxX;
+        const y = (Math.random() * 2 - 1) * maxY;
+
+        refuseBtn.style.transform = `translate(${x}px, ${y}px) scale(${shrinkScale})`;
+        forgiveBtn.style.transform = `scale(${growScale})`;
+        forgiveBtn.classList.add('growing');
+
+        refuseMessage.classList.remove('hidden');
+
+        if (refuseAttempts >= maxRefuseAttempts) {
+          refuseBtn.classList.add('hidden');
+          refuseBtn.disabled = true;
+          refuseBtn.style.pointerEvents = 'none';
+          refuseBtn.style.transform = 'scale(0.1)';
+          forgiveBtn.style.transform = 'scale(1.25)';
+          refuseMessage.classList.remove('hidden');
+        }
+      });
+
+      function refuseButtonPosition() {
+        const maxX = 24;
+        const maxY = 12;
+        const x = (Math.random() * 2 - 1) * maxX;
+        const y = (Math.random() * 2 - 1) * maxY;
+        refuseBtn.style.transform = `translate(${x}px, ${y}px)`;
+        setTimeout(() => {
+          refuseBtn.style.transform = '';
+        }, 500);
+      }
+
+      forgiveBtn.addEventListener('click', () => {
+        successOverlay.classList.remove('hidden');
+        showConfetti();
+      });
+
+      successOverlay.addEventListener('click', () => {
+        successOverlay.classList.add('hidden');
+      });
+
+      audioToggle.addEventListener('click', toggleMusic);
+
+      createFloatingHearts();
+    </script>
+  </body>
+</html>
